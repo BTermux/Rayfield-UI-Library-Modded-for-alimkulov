@@ -1358,8 +1358,12 @@ local function Minimise()
 	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
 	TweenService:Create(Topbar.CornerRepair, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
 	TweenService:Create(Topbar.Divider, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
-	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 495, 0, 45)}):Play()
-	TweenService:Create(Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 495, 0, 45)}):Play()
+
+	-- Уменьшаем только нижнюю часть окна, оставляя заголовок на месте
+	local targetSize = UDim2.new(0, 495, 0, 45)
+	local targetPosition = UDim2.new(Main.Position.X.Scale, Main.Position.X.Offset, Main.Position.Y.Scale + (Main.Size.Y.Offset - 45) / Main.Parent.AbsoluteSize.Y, Main.Position.Y.Offset)
+
+	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = targetSize, Position = targetPosition}):Play()
 
 	task.wait(0.3)
 
@@ -1369,7 +1373,6 @@ local function Minimise()
 	task.wait(0.2)
 	Debounce = false
 end
-
 local function updateSettings()
 	local encoded
 	local success, err = pcall(function()
