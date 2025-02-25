@@ -1375,6 +1375,7 @@ local function Minimise()
 	Debounce = false
 end
 
+
 local function createSettings(window)
 	if not (writefile and isfile and readfile and isfolder and makefolder) and not useStudio then
 		if Topbar['Settings'] then Topbar.Settings.Visible = false end
