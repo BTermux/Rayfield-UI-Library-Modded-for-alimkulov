@@ -1319,6 +1319,7 @@ local function Minimise()
 
 	task.spawn(closeSearch)
 
+	-- Прячем кнопки вкладок
 	for _, tabbtn in ipairs(TabList:GetChildren()) do
 		if tabbtn.ClassName == "Frame" and tabbtn.Name ~= "Placeholder" then
 			TweenService:Create(tabbtn, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
@@ -1328,6 +1329,7 @@ local function Minimise()
 		end
 	end
 
+	-- Прячем элементы
 	for _, tab in ipairs(Elements:GetChildren()) do
 		if tab.Name ~= "Template" and tab.ClassName == "ScrollingFrame" and tab.Name ~= "Placeholder" then
 			for _, element in ipairs(tab:GetChildren()) do
@@ -1359,11 +1361,10 @@ local function Minimise()
 	TweenService:Create(Topbar.CornerRepair, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
 	TweenService:Create(Topbar.Divider, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
 
-	-- Уменьшаем только нижнюю часть окна, оставляя заголовок на месте
-	local targetSize = UDim2.new(0, 495, 0, 45)
-	local targetPosition = UDim2.new(Main.Position.X.Scale, Main.Position.X.Offset, Main.Position.Y.Scale + (Main.Size.Y.Offset - 45) / Main.Parent.AbsoluteSize.Y, Main.Position.Y.Offset)
+	-- Изменяем только высоту Main, оставляя Topbar на месте
+	local targetSize = UDim2.new(Main.Size.X.Scale, Main.Size.X.Offset, 0, 45)
 
-	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = targetSize, Position = targetPosition}):Play()
+	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = targetSize}):Play()
 
 	task.wait(0.3)
 
@@ -1372,23 +1373,6 @@ local function Minimise()
 
 	task.wait(0.2)
 	Debounce = false
-end
-local function updateSettings()
-	local encoded
-	local success, err = pcall(function()
-		encoded = HttpService:JSONEncode(settingsTable)
-	end)
-
-	if success then
-		if useStudio then
-			if script.Parent['get.val'] then
-				script.Parent['get.val'].Value = encoded
-			end
-		end
-		if writefile then
-			writefile(RayfieldFolder..'/settings'..ConfigurationExtension, encoded)
-		end
-	end
 end
 
 local function createSettings(window)
