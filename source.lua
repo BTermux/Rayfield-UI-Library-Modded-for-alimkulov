@@ -1311,7 +1311,7 @@ local function Unhide()
 	Debounce = false
 end
 
-local function Minimise()
+llocal function Minimise()
     Debounce = true
     Topbar.ChangeSize.Image = "rbxassetid://"..11036884234
 
@@ -1319,8 +1319,9 @@ local function Minimise()
 
     task.spawn(closeSearch)
 
+    -- Анимация скрытия вкладок
     for _, tabbtn in ipairs(TabList:GetChildren()) do
-        if tabbtn.ClassName == "Frame" and tabbtn.Name ~= "Placeholder" then
+        if tabbtn:IsA("Frame") and tabbtn.Name ~= "Placeholder" then
             TweenService:Create(tabbtn, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
             TweenService:Create(tabbtn.Image, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
             TweenService:Create(tabbtn.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
@@ -1328,14 +1329,15 @@ local function Minimise()
         end
     end
 
+    -- Анимация скрытия элементов
     for _, tab in ipairs(Elements:GetChildren()) do
-        if tab.Name ~= "Template" and tab.ClassName == "ScrollingFrame" and tab.Name ~= "Placeholder" then
+        if tab:IsA("ScrollingFrame") and tab.Name ~= "Template" and tab.Name ~= "Placeholder" then
             for _, element in ipairs(tab:GetChildren()) do
-                if element.ClassName == "Frame" then
+                if element:IsA("Frame") then
                     if element.Name ~= "SectionSpacing" and element.Name ~= "Placeholder" then
-                        if element.Name == "SectionTitle" or element.Name == 'SearchTitle-fsefsefesfsefesfesfThanks' then
+                        if element.Name == "SectionTitle" or element.Name == "SearchTitle-fsefsefesfsefesfesfThanks" then
                             TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
-                        elseif element.Name == 'Divider' then
+                        elseif element.Name == "Divider" then
                             TweenService:Create(element.Divider, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
                         else
                             TweenService:Create(element, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
@@ -1343,7 +1345,7 @@ local function Minimise()
                             TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
                         end
                         for _, child in ipairs(element:GetChildren()) do
-                            if child.ClassName == "Frame" or child.ClassName == "TextLabel" or child.ClassName == "TextBox" or child.ClassName == "ImageButton" or child.ClassName == "ImageLabel" then
+                            if child:IsA("Frame") or child:IsA("TextLabel") or child:IsA("TextBox") or child:IsA("ImageButton") or child:IsA("ImageLabel") then
                                 child.Visible = false
                             end
                         end
@@ -1359,11 +1361,15 @@ local function Minimise()
     TweenService:Create(Topbar.CornerRepair, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
     TweenService:Create(Topbar.Divider, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
 
-    -- Новая анимация: поднимаем нижнюю часть окна вверх, оставляя заголовок на месте
-    local targetSize = UDim2.new(0, 495, 0, 45)
-    local targetPosition = UDim2.new(Main.Position.X.Scale, Main.Position.X.Offset, Main.Position.Y.Scale + (Main.Size.Y.Offset - 45) / Main.Parent.AbsoluteSize.Y, Main.Position.Y.Offset)
+    -- **Изменение позиции только нижней части окна**
+    local topbarHeight = 45 -- Высота заголовка (не изменяется)
+    local newYPosition = Main.Position.Y.Offset + (Main.Size.Y.Offset - topbarHeight)
 
-    TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = targetSize, Position = targetPosition}):Play()
+    -- Двигаем **только нижнюю часть** окна вверх
+    TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
+        Size = UDim2.new(0, 495, 0, topbarHeight), -- Уменьшаем высоту
+        Position = UDim2.new(Main.Position.X.Scale, Main.Position.X.Offset, 0, newYPosition) -- Поднимаем нижнюю часть
+    }):Play()
 
     task.wait(0.3)
 
